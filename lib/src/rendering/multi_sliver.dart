@@ -46,7 +46,9 @@ class RenderMultiSliver extends RenderSliver
         RenderSliverHelpers {
   RenderMultiSliver({
     required bool containing,
-  }) : _containing = containing;
+    required bool nestedScrollview,
+  })  : _containing = containing,
+        _nestedScrollView = nestedScrollview;
 
   @override
   void setupParentData(RenderObject child) {
@@ -60,6 +62,15 @@ class RenderMultiSliver extends RenderSliver
   set containing(bool containing) {
     if (_containing != containing) {
       _containing = containing;
+      markNeedsLayout();
+    }
+  }
+
+  bool _nestedScrollView;
+  bool get nestedScrollView => _nestedScrollView;
+  set nestedScrollView(bool nestedScrollView) {
+    if (_nestedScrollView != nestedScrollView) {
+      _nestedScrollView = nestedScrollView;
       markNeedsLayout();
     }
   }
@@ -276,7 +287,9 @@ class RenderMultiSliver extends RenderSliver
       layoutExtent: layoutExtent,
       cacheExtent: constraints.remainingCacheExtent - remainingCacheExtent,
       hasVisualOverflow: hasVisualOverflow,
-      maxScrollObstructionExtent: maxScrollObstructionExtent,
+      maxScrollObstructionExtent: _nestedScrollView
+          ? max(maxScrollObstructionExtent, paintExtent)
+          : maxScrollObstructionExtent,
       visible: visible && paintExtent > 0,
     );
 
