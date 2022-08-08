@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:sliver_tools/src/rendering/multi_sliver.dart';
 
+import 'helpers/nestest_scrollview_widget.dart';
 import 'helpers/pinned_header.dart';
 import 'helpers/unconstrained_scroll_physics.dart';
 
@@ -542,5 +543,16 @@ void multiSliverTests() {
         -10,
       );
     });
+  });
+
+  testWidgets(
+      'maxScrollObstructionExtent should be the sum of all maxScrollObstructionExtent children',
+      (tester) async {
+    await tester.pumpWidget(const NestedScrollViewTestWidget());
+
+    expect(
+      tester.getRect(find.byKey(NestedScrollViewTestWidget.tabBarViewKey)).top,
+      0.0,
+    );
   });
 }
